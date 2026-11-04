@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 
 import * as userService from "../services/database/user-service.js";
 import * as factory from "./crud-controller.js";
-import * as userFields from "../utils/constants/user-fields.js";
+import * as userFields from "../constants/user-fields.js";
 
 /**
  *@desc        Get Users

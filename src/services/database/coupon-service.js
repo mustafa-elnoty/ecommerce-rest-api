@@ -1,7 +1,7 @@
 import couponModel from "../../models/coupon-model.js";
 import ApiError from "../../utils/api-error.js";
 import * as factory from "./crud-service.js";
-import * as couponFields from "../../utils/constants/coupon-fields.js";
+import * as couponFields from "../../constants/coupon-fields.js";
 
 const crudConfig = { Model: couponModel, modelName: "Coupon" };
 

@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
 
 import * as authService from "../services/database/auth-service.js";
-import REFRESH_TOKEN_COOKIE_OPTIONS from "../utils/constants/cookie-options.js";
-import { AUTH_RESPONSE_FIELDS } from "../utils/constants/user-fields.js";
+import REFRESH_TOKEN_COOKIE_OPTIONS from "../constants/cookie-options.js";
+import { AUTH_RESPONSE_FIELDS } from "../constants/user-fields.js";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
 
 const sendAuthResponse = (

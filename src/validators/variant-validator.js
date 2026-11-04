@@ -1,6 +1,6 @@
 import { body, param } from "express-validator";
 
-import { ALLOWED_VARIANT_UPDATE_FIELDS } from "../utils/constants/variant-fields.js";
+import { ALLOWED_VARIANT_UPDATE_FIELDS } from "../constants/variant-fields.js";
 import requireAtLeastOneField from "../utils/require-at-least-one-field.js";
 import requiredOrOptional from "../helpers/required-or-optional.js";
 import validatorMiddleware from "../middlewares/validator-middleware.js";

@@ -1,7 +1,7 @@
 import asyncHandler from "express-async-handler";
 
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
-import ALLOWED_ADDRESS_FIELDS from "../utils/constants/address-fields.js";
+import ALLOWED_ADDRESS_FIELDS from "../constants/address-fields.js";
 import * as addressService from "../services/database/address-service.js";
 
 export const addAddress = asyncHandler(async (req, res, next) => {

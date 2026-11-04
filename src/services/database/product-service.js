@@ -4,7 +4,7 @@ import subcategoryModel from "../../models/subcategory-model.js";
 import writeProcessedFiles from "../storage/local-storage/write-processed-files.js";
 import ApiError from "../../utils/api-error.js";
 import * as factory from "./crud-service.js";
-import * as productFields from "../../utils/constants/product-fields.js";
+import * as productFields from "../../constants/product-fields.js";
 
 const crudConfig = { Model: productModel, modelName: "Product" };
 

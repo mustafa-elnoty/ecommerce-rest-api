@@ -1,6 +1,6 @@
 import brandModel from "../../models/brand-model.js";
 import * as factory from "./crud-service.js";
-import * as brandFields from "../../utils/constants/brand-fields.js";
+import * as brandFields from "../../constants/brand-fields.js";
 
 const crudConfig = { Model: brandModel, modelName: "Brand" };
 

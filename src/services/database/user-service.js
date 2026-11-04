@@ -3,7 +3,7 @@ import bcrypt from "bcryptjs";
 import userModel from "../../models/user-model.js";
 import * as factory from "./crud-service.js";
 import ApiError from "../../utils/api-error.js";
-import * as userFields from "../../utils/constants/user-fields.js";
+import * as userFields from "../../constants/user-fields.js";
 
 const crudConfig = { Model: userModel, modelName: "User" };
 

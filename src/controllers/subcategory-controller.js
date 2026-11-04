@@ -3,7 +3,7 @@ import asyncHandler from "express-async-handler";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
 import * as subCategoryService from "../services/database/subcategory-service.js";
 import * as factory from "./crud-controller.js";
-import * as subCategoriesFields from "../utils/constants/subcategory-fields.js";
+import * as subCategoriesFields from "../constants/subcategory-fields.js";
 
 const populateOptions = { path: "category", select: "name slug" };
 

@@ -1,6 +1,6 @@
 import categoryModel from "../../models/category-model.js";
 import * as factory from "./crud-service.js";
-import * as categoryFields from "../../utils/constants/category-fields.js";
+import * as categoryFields from "../../constants/category-fields.js";
 
 const crudConfig = { Model: categoryModel, modelName: "Category" };
 

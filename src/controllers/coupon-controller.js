@@ -1,6 +1,6 @@
 import * as factory from "./crud-controller.js";
 import * as couponService from "../services/database/coupon-service.js";
-import { ALLOWED_COUPON_FIELDS } from "../utils/constants/coupon-fields.js";
+import { ALLOWED_COUPON_FIELDS } from "../constants/coupon-fields.js";
 
 export const getCoupons = factory.getDocs({ service: couponService });
 export const getCoupon = factory.getDoc({ service: couponService });

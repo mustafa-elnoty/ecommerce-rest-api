@@ -2,7 +2,7 @@ import productModel from "../../models/product-model.js";
 import reviewModel from "../../models/review-model.js";
 import ApiError from "../../utils/api-error.js";
 import * as factory from "./crud-service.js";
-import * as reviewFields from "../../utils/constants/review-fields.js";
+import * as reviewFields from "../../constants/review-fields.js";
 
 export const getDoc = factory.getDoc({
   Model: reviewModel,

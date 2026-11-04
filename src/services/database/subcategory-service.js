@@ -1,7 +1,7 @@
 import subCategoryModel from "../../models/subcategory-model.js";
 import categoryModel from "../../models/category-model.js";
 import * as factory from "./crud-service.js";
-import * as subCategoryFields from "../../utils/constants/subcategory-fields.js";
+import * as subCategoryFields from "../../constants/subcategory-fields.js";
 import ApiError from "../../utils/api-error.js";
 import writeProcessedFiles from "../storage/local-storage/write-processed-files.js";
 

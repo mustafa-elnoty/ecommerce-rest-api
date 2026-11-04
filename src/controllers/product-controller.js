@@ -2,8 +2,8 @@ import asyncHandler from "express-async-handler";
 
 import * as factory from "./crud-controller.js";
 import * as productService from "../services/database/product-service.js";
-import * as productFields from "../utils/constants/product-fields.js";
-import * as variantFields from "../utils/constants/variant-fields.js";
+import * as productFields from "../constants/product-fields.js";
+import * as variantFields from "../constants/variant-fields.js";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
 
 import { deleteOldSingleImage } from "../services/storage/local-storage/delete-files.js";

@@ -2,7 +2,7 @@ import asyncHandler from "express-async-handler";
 
 import * as variantService from "../services/database/variant-service.js";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
-import * as variantFields from "../utils/constants/variant-fields.js";
+import * as variantFields from "../constants/variant-fields.js";
 
 export const addVariant = asyncHandler(async (req, res) => {
   const allowedFields = pickAllowedFields(
