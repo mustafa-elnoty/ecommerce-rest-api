@@ -13,31 +13,46 @@ export const getById =
   };
 
 export const getDocs =
-  ({ Model, defaultFields, nestedFilterField }) =>
-  async ({ sanitizedQuery, reqParams, populateOptions }) => {
-    const nestedId = nestedFilterField
-      ? reqParams[`${nestedFilterField}Id`]
-      : null;
+  ({
+    Model,
+    parent: { parentModel, paramField, referenceField } = {},
+    defaultFields,
+    filterFields,
+    sortFields,
+    selectFields,
+    baseFilter = {},
+  }) =>
+  async ({ sanitizedQuery, reqParams = {} }) => {
+    const parentId = paramField ? reqParams[paramField] : null;
 
-    const baseFilter = nestedId ? { [nestedFilterField]: nestedId } : {};
+    if (parentId && parentModel) {
+      const parentDocumentExists = await parentModel.exists({
+        _id: parentId,
+      });
 
-    const apiFeatures = new ApiFeatures(Model.find(baseFilter), sanitizedQuery)
-      .filtering()
+      if (!parentDocumentExists)
+        throw new ApiError(`${referenceField} not found`, 404);
+    }
+
+    const scopeFilter = parentId
+      ? { ...baseFilter, [referenceField]: parentId }
+      : { ...baseFilter };
+
+    const apiFeatures = new ApiFeatures(Model.find(scopeFilter), sanitizedQuery)
+      .filtering(filterFields)
       .search()
-      .sort()
-      .limitFields(defaultFields)
+      .sort(sortFields)
+      .limitFields(defaultFields, selectFields)
       .paginate();
-
-    if (populateOptions) apiFeatures.customPopulate(populateOptions);
 
     const { mongooseQuery, filterQuery } = apiFeatures;
 
-    const [docs, totalDocs] = await Promise.all([
+    const [docs, totalDocuments] = await Promise.all([
       mongooseQuery,
-      Model.countDocuments({ ...baseFilter, ...filterQuery }),
+      Model.countDocuments({ ...filterQuery, ...scopeFilter }),
     ]);
 
-    const paginationResult = apiFeatures.buildPaginationResult(totalDocs);
+    const paginationResult = apiFeatures.buildPaginationResult(totalDocuments);
 
     return { docs, paginationResult };
   };

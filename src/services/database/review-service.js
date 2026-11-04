@@ -1,33 +1,29 @@
-import Product from "../../models/product-model.js";
+import productModel from "../../models/product-model.js";
 import reviewModel from "../../models/review-model.js";
 import ApiError from "../../utils/api-error.js";
 import * as factory from "./crud-service.js";
+import * as reviewFields from "../../utils/constants/review-fields.js";
 
 export const getDoc = factory.getDoc({
   Model: reviewModel,
   modelName: "Review",
 });
 
-export const getDocs = async ({
-  sanitizedQuery,
-  reqParams,
-  populateOptions,
-}) => {
-  const { productId } = reqParams;
-
-  const product = await Product.exists({ _id: productId });
-
-  if (!product) throw new ApiError(`Product not found`, 404);
-
-  return factory.getDocs({ Model: reviewModel, nestedFilterField: "product" })(
-    sanitizedQuery,
-    reqParams,
-    populateOptions,
-  );
-};
+export const getDocs = factory.getDocs({
+  Model: reviewModel,
+  parent: {
+    parentModel: productModel,
+    paramField: "productId",
+    referenceField: "product",
+  },
+  defaultFields: reviewFields.ALLOWED_REVIEW_SELECT_FIELDS.join(" "),
+  filterFields: reviewFields.ALLOWED_REVIEW_FILTER_FIELDS,
+  sortFields: reviewFields.ALLOWED_REVIEW_SORT_FIELDS,
+  selectFields: reviewFields.ALLOWED_REVIEW_SELECT_FIELDS,
+});
 
 export const create = async ({ userId, productId, verifiedFields }) => {
-  const product = await Product.exists({ _id: productId });
+  const product = await productModel.exists({ _id: productId });
   if (!product) throw new ApiError(`Product not found`, 404);
 
   return reviewModel.create({

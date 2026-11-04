@@ -1,6 +1,6 @@
 import { param, body } from "express-validator";
 
-import ALLOWED_REVIEW_FIELDS from "../utils/constants/review-fields.js";
+import { ALLOWED_REVIEW_FIELDS } from "../utils/constants/review-fields.js";
 import requireAtLeastOneField from "../utils/require-at-least-one-field.js";
 import requiredOrOptional from "../helpers/required-or-optional.js";
 import validatorMiddleware from "../middlewares/validator-middleware.js";

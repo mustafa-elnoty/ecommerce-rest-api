@@ -1,6 +1,7 @@
 import subCategoryModel from "../../models/subcategory-model.js";
-import Category from "../../models/category-model.js";
+import categoryModel from "../../models/category-model.js";
 import * as factory from "./crud-service.js";
+import * as subCategoryFields from "../../utils/constants/subcategory-fields.js";
 import ApiError from "../../utils/api-error.js";
 import writeProcessedFiles from "../storage/local-storage/write-processed-files.js";
 
@@ -10,23 +11,22 @@ export const getById = factory.getById(crudConfig);
 export const getDoc = factory.getDoc(crudConfig);
 export const del = factory.del(crudConfig);
 
+export const getDocs = factory.getDocs({
+  Model: subCategoryModel,
+  parent: {
+    parentModel: categoryModel,
+    paramField: "categoryId",
+    referenceField: "category",
+  },
+  defaultFields: "name image slug",
+  filterFields: subCategoryFields.ALLOWED_SUBCATEGORY_FILTER_FIELDS,
+  sortFields: subCategoryFields.ALLOWED_SUBCATEGORY_SORT_FIELDS,
+  selectFields: subCategoryFields.ALLOWED_SUBCATEGORY_SELECT_FIELDS,
+});
+
 const assertCategoryExists = async (categoryId) => {
-  const categoryExists = await Category.exists({ _id: categoryId });
+  const categoryExists = await categoryModel.exists({ _id: categoryId });
   if (!categoryExists) throw new ApiError(`Category not found`, 404);
-};
-
-export const getDocs = async ({
-  sanitizedQuery,
-  reqParams,
-  populateOptions,
-}) => {
-  await assertCategoryExists(reqParams.categoryId);
-
-  return factory.getDocs({
-    Model: subCategoryModel,
-    defaultFields: "name image slug",
-    nestedFilterField: "category",
-  })({ sanitizedQuery, reqParams, populateOptions });
 };
 
 export const create = async ({ allowedFields, categoryId, processedImage }) => {

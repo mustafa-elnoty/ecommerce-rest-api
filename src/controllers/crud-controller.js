@@ -3,12 +3,11 @@ import asyncHandler from "express-async-handler";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
 import * as deleteLocalFiles from "../services/storage/local-storage/delete-files.js";
 
-export const getDocs = ({ service, populateOptions }) =>
+export const getDocs = ({ service }) =>
   asyncHandler(async (req, res, next) => {
     const { docs, paginationResult } = await service.getDocs({
       sanitizedQuery: req.sanitizedQuery,
       reqParams: req.params,
-      populateOptions,
     });
 
     res.status(200).json({

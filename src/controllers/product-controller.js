@@ -1,12 +1,9 @@
 import asyncHandler from "express-async-handler";
 
+import * as factory from "./crud-controller.js";
 import * as productService from "../services/database/product-service.js";
-
-import {
-  ALLOWED_PRODUCT_CREATE_FIELDS,
-  ALLOWED_PRODUCT_UPDATE_FIELDS,
-} from "../utils/constants/product-fields.js";
-import { ALLOWED_VARIANT_CREATE_FIELDS } from "../utils/constants/variant-fields.js";
+import * as productFields from "../utils/constants/product-fields.js";
+import * as variantFields from "../utils/constants/variant-fields.js";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
 
 import { deleteOldSingleImage } from "../services/storage/local-storage/delete-files.js";
@@ -21,17 +18,7 @@ const populateOptions = {
  *@route       GET /api/v1/products
  *@access      Public
  */
-export const getProducts = asyncHandler(async (req, res, next) => {
-  const { docs, paginationResult } = await productService.getDocs({
-    sanitizedQuery: req.sanitizedQuery,
-  });
-
-  res.status(200).json({
-    results: docs.length,
-    paginationResult,
-    data: docs,
-  });
-});
+export const getProducts = factory.getDocs({ service: productService });
 
 /**
  *@desc        Get Specific Product
@@ -54,12 +41,12 @@ export const getProduct = asyncHandler(async (req, res, next) => {
  */
 export const createProduct = asyncHandler(async (req, res, next) => {
   const fieldsToCreate = pickAllowedFields(
-    ALLOWED_PRODUCT_CREATE_FIELDS,
+    productFields.ALLOWED_PRODUCT_CREATE_FIELDS,
     req.body,
   );
 
   fieldsToCreate.variants = fieldsToCreate.variants.map((variant) =>
-    pickAllowedFields(ALLOWED_VARIANT_CREATE_FIELDS, variant),
+    pickAllowedFields(variantFields.ALLOWED_VARIANT_CREATE_FIELDS, variant),
   );
 
   const doc = await productService.create({
@@ -78,7 +65,7 @@ export const createProduct = asyncHandler(async (req, res, next) => {
  */
 export const updateProduct = asyncHandler(async (req, res, next) => {
   const fieldsToUpdate = pickAllowedFields(
-    ALLOWED_PRODUCT_UPDATE_FIELDS,
+    productFields.ALLOWED_PRODUCT_UPDATE_FIELDS,
     req.body,
   );
 

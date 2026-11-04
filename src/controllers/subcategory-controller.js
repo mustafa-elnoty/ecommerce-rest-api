@@ -3,10 +3,7 @@ import asyncHandler from "express-async-handler";
 import pickAllowedFields from "../helpers/pick-allowed-fields.js";
 import * as subCategoryService from "../services/database/subcategory-service.js";
 import * as factory from "./crud-controller.js";
-import {
-  ALLOWED_SUBCATEGORY_UPDATE_FIELDS,
-  ALLOWED_SUBCATEGORY_CREATE_FIELDS,
-} from "../utils/constants/subcategory-fields.js";
+import * as subCategoriesFields from "../utils/constants/subcategory-fields.js";
 
 const populateOptions = { path: "category", select: "name slug" };
 
@@ -36,7 +33,7 @@ export const getSubCategory = factory.getDoc({
  */
 export const createSubCategory = asyncHandler(async (req, res, next) => {
   const verifiedFields = pickAllowedFields(
-    ALLOWED_SUBCATEGORY_CREATE_FIELDS,
+    subCategoriesFields.ALLOWED_SUBCATEGORY_CREATE_FIELDS,
     req.body,
   );
 
@@ -56,7 +53,7 @@ export const createSubCategory = asyncHandler(async (req, res, next) => {
  */
 export const updateSubCategory = asyncHandler(async (req, res, next) => {
   const verifiedFields = pickAllowedFields(
-    ALLOWED_SUBCATEGORY_UPDATE_FIELDS,
+    subCategoriesFields.ALLOWED_SUBCATEGORY_UPDATE_FIELDS,
     req.body,
   );
 

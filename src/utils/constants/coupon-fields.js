@@ -1,4 +1,4 @@
-const ALLOWED_COUPON_FIELDS = [
+export const ALLOWED_COUPON_FIELDS = [
   "code",
   "discountType",
   "discountValue",
@@ -9,5 +9,27 @@ const ALLOWED_COUPON_FIELDS = [
   "expire",
   "isActive",
 ];
-
-export default ALLOWED_COUPON_FIELDS;
+export const ALLOWED_COUPON_FILTER_FIELDS = [
+  "code",
+  "discountType",
+  "discountValue",
+  "isActive",
+  "startDate",
+  "expire",
+];
+export const ALLOWED_COUPON_SORT_FIELDS = [
+  "createdAt",
+  "expire",
+  "discountValue",
+];
+export const ALLOWED_COUPON_SELECT_FIELDS = [
+  "code",
+  "discountType",
+  "discountValue",
+  "maxDiscount",
+  "startDate",
+  "minOrderValue",
+  "maxUses",
+  "expire",
+  "isActive",
+];

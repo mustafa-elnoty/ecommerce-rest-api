@@ -1,14 +1,16 @@
 import couponModel from "../../models/coupon-model.js";
 import ApiError from "../../utils/api-error.js";
-
 import * as factory from "./crud-service.js";
+import * as couponFields from "../../utils/constants/coupon-fields.js";
 
 const crudConfig = { Model: couponModel, modelName: "Coupon" };
 
 export const getDocs = factory.getDocs({
   Model: couponModel,
-  defaultFields:
-    "code discountType discountValue maxDiscount startDate minOrderValue maxUses expire isActive",
+  defaultFields: couponFields.ALLOWED_COUPON_FIELDS.join(" "),
+  filterFields: couponFields.ALLOWED_COUPON_FILTER_FIELDS,
+  sortFields: couponFields.ALLOWED_COUPON_SORT_FIELDS,
+  selectFields: couponFields.ALLOWED_COUPON_SELECT_FIELDS,
 });
 export const getDoc = factory.getDoc(crudConfig);
 export const create = factory.create(crudConfig);

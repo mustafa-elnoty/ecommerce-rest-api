@@ -2,10 +2,7 @@ import asyncHandler from "express-async-handler";
 
 import * as userService from "../services/database/user-service.js";
 import * as factory from "./crud-controller.js";
-import {
-  PROFILE_FIELDS,
-  ADMIN_FIELDS,
-} from "../utils/constants/user-fields.js";
+import * as userFields from "../utils/constants/user-fields.js";
 
 /**
  *@desc        Get Users
@@ -37,7 +34,7 @@ export const getProfile = factory.getDoc({
  *@access      Private (admin)
  */
 export const createUser = factory.create({
-  fieldsToCreate: ADMIN_FIELDS,
+  fieldsToCreate: userFields.ADMIN_FIELDS,
   service: userService,
 });
 
@@ -47,7 +44,7 @@ export const createUser = factory.create({
  *@access      Private (admin)
  */
 export const updateUser = factory.update({
-  fieldsToUpdate: PROFILE_FIELDS,
+  fieldsToUpdate: userFields.PROFILE_FIELDS,
   service: userService,
   imageField: "profileImage",
   folderName: "users",
@@ -59,7 +56,7 @@ export const updateUser = factory.update({
  *@access      Private (protect)
  */
 export const updateProfile = factory.update({
-  fieldsToUpdate: PROFILE_FIELDS,
+  fieldsToUpdate: userFields.PROFILE_FIELDS,
   service: userService,
   imageField: "profileImage",
   folderName: "users",

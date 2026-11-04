@@ -2,9 +2,9 @@ import productModel from "../../models/product-model.js";
 import categoryModel from "../../models/category-model.js";
 import subcategoryModel from "../../models/subcategory-model.js";
 import writeProcessedFiles from "../storage/local-storage/write-processed-files.js";
-import * as factory from "./crud-service.js";
-import ApiFeatures from "../../utils/api-features.js";
 import ApiError from "../../utils/api-error.js";
+import * as factory from "./crud-service.js";
+import * as productFields from "../../utils/constants/product-fields.js";
 
 const crudConfig = { Model: productModel, modelName: "Product" };
 
@@ -52,29 +52,15 @@ export const validateProductRelations = async ({
   }
 };
 
-export const getDocs = async ({ sanitizedQuery, includeDeleted = false }) => {
-  const filter = includeDeleted ? {} : { isDeleted: false };
-
-  const apiFeatures = new ApiFeatures(productModel.find(filter), sanitizedQuery)
-    .filtering()
-    .search()
-    .sort()
-    .limitFields(
-      "title price slug imageCover discountPercentage priceAfterDiscount avgRatings ratingsCount",
-    )
-    .paginate();
-
-  const { mongooseQuery, filterQuery } = apiFeatures;
-
-  const [docs, totalDocs] = await Promise.all([
-    mongooseQuery,
-    productModel.countDocuments({ ...filter, ...filterQuery }),
-  ]);
-
-  const paginationResult = apiFeatures.buildPaginationResult(totalDocs);
-
-  return { docs, paginationResult };
-};
+export const getDocs = factory.getDocs({
+  Model: productModel,
+  baseFilter: { isDeleted: false },
+  defaultFields:
+    "title price slug imageCover discountPercentage priceAfterDiscount avgRatings ratingsCount",
+  filterFields: productFields.ALLOWED_PRODUCT_FILTER_FIELDS,
+  sortFields: productFields.ALLOWED_PRODUCT_SORT_FIELDS,
+  selectFields: productFields.ALLOWED_PRODUCT_SELECT_FIELDS,
+});
 
 export const getDoc = async ({
   productId,

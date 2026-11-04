@@ -1,3 +1,4 @@
+// Add $ to the available mongodb Operator
 const prefixOperators = (obj) => {
   if (Array.isArray(obj)) {
     return obj.map(prefixOperators);
@@ -16,26 +17,35 @@ const prefixOperators = (obj) => {
   return obj;
 };
 
+// Convert text to an array
+const toList = (value) =>
+  typeof value === "string"
+    ? value
+        .split(",")
+        .map((s) => s.trim())
+        .filter(Boolean)
+    : [];
+
 export default class ApiFeatures {
   constructor(mongooseQuery, sanitizedQuery) {
     this.mongooseQuery = mongooseQuery;
-    this.sanitizedQuery = sanitizedQuery;
+    this.sanitizedQuery = sanitizedQuery ?? {};
     this.filterQuery = {};
   }
 
+  get keyword() {
+    const { keyword } = this.sanitizedQuery;
+    return typeof keyword === "string" ? keyword.trim() : "";
+  }
+
   filtering(allowedFields = []) {
-    let queryObj = { ...this.sanitizedQuery };
-
-    const excludeFields = ["sort", "limit", "page", "keyword", "fields"];
-    excludeFields.forEach((el) => delete queryObj[el]);
-
-    if (allowedFields.length) {
-      Object.keys(queryObj).forEach((key) => {
-        if (!allowedFields.includes(key)) delete queryObj[key];
-      });
-    }
-
-    queryObj = prefixOperators(queryObj);
+    const queryObj = prefixOperators(
+      Object.fromEntries(
+        Object.entries(this.sanitizedQuery).filter(([key]) =>
+          allowedFields.includes(key),
+        ),
+      ),
+    );
 
     this.filterQuery = { ...this.filterQuery, ...queryObj };
     this.mongooseQuery.find(queryObj);
@@ -44,10 +54,8 @@ export default class ApiFeatures {
   }
 
   search() {
-    const keyword = this.sanitizedQuery?.keyword?.trim();
-
-    if (keyword) {
-      const searchCondition = { $text: { $search: keyword } };
+    if (this.keyword) {
+      const searchCondition = { $text: { $search: this.keyword } };
 
       this.filterQuery = { ...this.filterQuery, ...searchCondition };
       this.mongooseQuery.find(searchCondition);
@@ -55,35 +63,27 @@ export default class ApiFeatures {
     return this;
   }
 
-  sort() {
-    const sortParam = this.sanitizedQuery?.sort;
+  sort(allowedFields = []) {
+    const requested = toList(this.sanitizedQuery.sort).filter((field) =>
+      allowedFields.includes(field.replace(/^-/, "")),
+    );
 
-    if (sortParam) {
-      const sortBy = sortParam
-        .split(",")
-        .map((s) => s.trim())
-        .join(" ");
-
-      this.mongooseQuery.sort(sortBy);
-    } else if (!this.sanitizedQuery?.keyword) {
+    if (requested.length) {
+      this.mongooseQuery.sort(requested.join(" "));
+    } else if (!this.keyword) {
       this.mongooseQuery.sort("-createdAt");
     }
     return this;
   }
 
-  limitFields(defaultFields = "") {
-    const fieldsParam = this.sanitizedQuery?.fields;
+  limitFields(defaultFields = "", allowedFields = []) {
+    const requested = toList(this.sanitizedQuery.fields).filter((field) =>
+      allowedFields.includes(field),
+    );
 
-    if (fieldsParam) {
-      const fields = fieldsParam
-        .split(",")
-        .map((s) => s.trim())
-        .join(" ");
-
-      this.mongooseQuery.select(fields);
-    } else {
-      this.mongooseQuery.select(defaultFields);
-    }
+    this.mongooseQuery.select(
+      requested.length ? requested.join(" ") : defaultFields,
+    );
     return this;
   }
 
@@ -91,9 +91,13 @@ export default class ApiFeatures {
     let page = parseInt(this.sanitizedQuery.page, 10);
     if (!Number.isInteger(page) || page < 1) page = 1;
 
+    const DEFAULT_LIMIT = 50;
+    const MAX_LIMIT = 100;
+
     let limit = parseInt(this.sanitizedQuery.limit, 10);
-    if (!Number.isInteger(limit) || limit < 1) limit = 5;
-    if (limit > 100) limit = 100;
+    if (!Number.isInteger(limit) || limit < 1) limit = DEFAULT_LIMIT;
+
+    limit = Math.min(limit, MAX_LIMIT);
 
     const skip = (page - 1) * limit;
 
@@ -119,19 +123,5 @@ export default class ApiFeatures {
     if (page * limit < totalDocs) paginationResult.nextPage = page + 1;
 
     return paginationResult;
-  }
-
-  customPopulate(populateOptions) {
-    const fieldName = Object.values(populateOptions)[0];
-
-    const shouldPopulate =
-      !this.sanitizedQuery.fields ||
-      this.sanitizedQuery.fields.includes(fieldName);
-
-    if (shouldPopulate) {
-      this.mongooseQuery.populate(populateOptions);
-    }
-
-    return this;
   }
 }

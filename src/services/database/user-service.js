@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import userModel from "../../models/user-model.js";
 import * as factory from "./crud-service.js";
 import ApiError from "../../utils/api-error.js";
+import * as userFields from "../../utils/constants/user-fields.js";
 
 const crudConfig = { Model: userModel, modelName: "User" };
 
@@ -10,6 +11,9 @@ export const getDocs = factory.getDocs({
   Model: userModel,
   defaultFields:
     "firstName lastName email phone role active profileImage createdAt",
+  filterFields: userFields.ALLOWED_USER_FILTER_FIELDS,
+  sortFields: userFields.ALLOWED_USER_SORT_FIELDS,
+  selectFields: userFields.ALLOWED_USER_SELECT_FIELDS,
 });
 export const getDoc = factory.getDoc(crudConfig);
 export const del = factory.del(crudConfig);
