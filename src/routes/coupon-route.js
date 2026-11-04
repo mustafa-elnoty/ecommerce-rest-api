@@ -15,7 +15,7 @@ router
   .post(couponValidator.createCouponValidator, couponController.createCoupon);
 
 router
-  .route("/:id")
+  .route("/:couponId")
   .get(couponValidator.getCouponValidator, couponController.getCoupon)
   .patch(
     attachCurrentCoupon,

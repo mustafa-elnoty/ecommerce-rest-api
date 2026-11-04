@@ -18,11 +18,12 @@ export const getSubCategories = factory.getDocs({
 
 /**
  *@desc        Get SubCategories
- *@route       GET /api/v1/subcategories/:id
+ *@route       GET /api/v1/subcategories/:subCategoryId
  *@access      Public
  */
 export const getSubCategory = factory.getDoc({
   service: subCategoryService,
+  fieldParamId: "subCategoryId",
   populateOptions,
 });
 
@@ -48,7 +49,7 @@ export const createSubCategory = asyncHandler(async (req, res, next) => {
 
 /**
  *@desc        Update SubCategories
- *@route       PATCH /api/v1/subcategories/:id
+ *@route       PATCH /api/v1/subcategories/:subCategoryId
  * @access      Private
  */
 export const updateSubCategory = asyncHandler(async (req, res, next) => {
@@ -59,7 +60,7 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
 
   const doc = await subCategoryService.update({
     allowedFields: verifiedFields,
-    subCategoryId: req.params.id,
+    subCategoryId: req.params.subCategoryId,
     categoryId: req.body.category,
     processedImage: req.processedImage,
   });
@@ -69,11 +70,12 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
 
 /**
  *@desc        Delete SubCategories
- *@route       DELETE /api/v1/subcategories/:id
+ *@route       DELETE /api/v1/subcategories/:subCategoryId
  *@access      Private
  */
 export const deleteSubCategory = factory.del({
   service: subCategoryService,
+  fieldParamId: "subCategoryId",
   imageFields: ["image"],
   folderName: "subcategories",
 });

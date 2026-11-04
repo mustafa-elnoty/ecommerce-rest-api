@@ -30,13 +30,14 @@ nestedReviewRouter.post(
 export const standaloneReviewRouter = express.Router();
 
 standaloneReviewRouter.get(
-  "/:id",
+  "/:reviewId",
   reviewValidator.getReviewValidator,
   reviewController.getReview,
 );
 
 standaloneReviewRouter.use(authMiddleware.protect);
+
 standaloneReviewRouter
-  .route("/:id")
+  .route("/:reviewId")
   .patch(reviewValidator.updateReviewValidator, reviewController.updateReview)
   .delete(reviewValidator.deleteReviewValidator, reviewController.deleteReview);

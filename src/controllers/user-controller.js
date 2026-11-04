@@ -13,10 +13,13 @@ export const getUsers = factory.getDocs({ service: userService });
 
 /**
  *@desc        Get Specific User
- *@route       GET /api/v1/users/:id
+ *@route       GET /api/v1/users/:userId
  *@access      Private (admin)
  */
-export const getUser = factory.getDoc({ service: userService });
+export const getUser = factory.getDoc({
+  service: userService,
+  fieldParamId: "userId",
+});
 
 /**
  *@desc        Get Current User Data
@@ -65,12 +68,12 @@ export const updateProfile = factory.update({
 
 /**
  *@desc        Update User Role (Admin Action)
- *@route       PATCH /api/v1/users/:id/role
+ *@route       PATCH /api/v1/users/:userId/role
  *@access      Private (admin)
  */
 export const updateUserRole = asyncHandler(async (req, res, next) => {
   const doc = await userService.updateRole({
-    id: req.params.id,
+    id: req.params.userId,
     role: req.body.role,
   });
 
@@ -104,12 +107,11 @@ export const deactivateProfile = asyncHandler(async (req, res, next) => {
 
 /**
  *@desc        Deactivate Specific User (Admin Action)
- *@route       PATCH /api/v1/users/:id/deactivate
+ *@route       PATCH /api/v1/users/:userId/deactivate
  *@access      Private (admin)
  */
 export const deactivateUser = asyncHandler(async (req, res, next) => {
-  const { id } = req.params;
-  await userService.deactivateUser({ id });
+  await userService.deactivateUser({ id: req.params.userId });
 
   res.status(204).send();
 });

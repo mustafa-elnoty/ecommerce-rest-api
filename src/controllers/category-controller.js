@@ -11,10 +11,13 @@ export const getAllCategories = factory.getDocs({ service: categoryService });
 
 /**
  *@desc        Get Category
- *@route       GET /api/v1/categories/:id
+ *@route       GET /api/v1/categories/:categoryId
  *@access      Public
  */
-export const getCategory = factory.getDoc({ service: categoryService });
+export const getCategory = factory.getDoc({
+  service: categoryService,
+  fieldParamId: "categoryId",
+});
 
 /**
  *@desc        Create Category
@@ -28,11 +31,12 @@ export const createCategory = factory.create({
 
 /**
  *@desc        Update Category
- *@route       PATCH /api/v1/categories/:id
+ *@route       PATCH /api/v1/categories/:categoryId
  *@access      Private
  */
 export const updateCategory = factory.update({
   service: categoryService,
+  fieldParamId: "categoryId",
   fieldsToUpdate: ALLOWED_CATEGORY_FIELDS,
   imageField: "image",
   folderName: "categories",
@@ -40,11 +44,12 @@ export const updateCategory = factory.update({
 
 /**
  *@desc        Delete Category
- *@route       DELETE /api/v1/categories/:id
+ *@route       DELETE /api/v1/categories/:categoryId
  *@access      Private
  */
 export const deleteCategory = factory.del({
   service: categoryService,
+  fieldParamId: "categoryId",
   imageFields: ["image"],
   folderName: "categories",
 });

@@ -42,7 +42,7 @@ nestedSubCategoryRouter.post(
 export const standaloneSubCategoryRouter = express.Router();
 
 standaloneSubCategoryRouter.get(
-  "/:id",
+  "/:subCategoryId",
   subCategoryValidator.getSubCategoryValidator,
   subCategoryController.getSubCategory,
 );
@@ -51,7 +51,7 @@ standaloneSubCategoryRouter.use(authMiddleware.protect);
 standaloneSubCategoryRouter.use(authMiddleware.allowedTo("admin"));
 
 standaloneSubCategoryRouter
-  .route("/:id")
+  .route("/:subCategoryId")
   .patch(
     uploadCoverImage,
     subCategoryValidator.updateSubCategoryValidator,

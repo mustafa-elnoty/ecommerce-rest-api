@@ -11,10 +11,13 @@ export const getBrands = factory.getDocs({ service: brandService });
 
 /**
  *@desc        Get Specific Brand
- * @route       GET /api/v1/brands/:id
+ *@route       GET /api/v1/brands/:brandId
  *@access      Public
  */
-export const getBrand = factory.getDoc({ service: brandService });
+export const getBrand = factory.getDoc({
+  service: brandService,
+  fieldParamId: "brandId",
+});
 
 /**
  *@desc        Create Brand
@@ -28,11 +31,12 @@ export const createBrand = factory.create({
 
 /**
  *@desc        Update Brand
- *@route       PATCH /api/v1/brands/:id
+ *@route       PATCH /api/v1/brands/:brandId
  *@access      Private
  */
 export const updateBrand = factory.update({
   service: brandService,
+  fieldParamId: "brandId",
   fieldsToUpdate: ALLOWED_BRAND_FIELDS,
   imageField: "image",
   folderName: "brands",
@@ -40,11 +44,12 @@ export const updateBrand = factory.update({
 
 /**
  *@desc        Delete Brand
- *@route       DELETE /api/v1/brands/:id
+ *@route       DELETE /api/v1/brands/:brandId
  *@access      Private
  */
 export const deleteBrand = factory.del({
   service: brandService,
+  fieldParamId: "brandId",
   imageFields: ["image"],
   folderName: "brands",
 });

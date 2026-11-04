@@ -21,11 +21,12 @@ export const getReviews = factory.getDocs({
 
 /**
  *@desc        Get Specific Review
- *@route       GET /api/v1/reviews/:id
+ *@route       GET /api/v1/reviews/:reviewId
  *@access      Public
  */
 export const getReview = factory.getDoc({
   service: reviewService,
+  fieldParamId: "reviewId",
   populateOptions,
 });
 
@@ -48,7 +49,7 @@ export const createReview = asyncHandler(async (req, res, next) => {
 
 /**
  *@desc        Update Review
- *@route       PATCH /api/v1/reviews/:id
+ *@route       PATCH /api/v1/reviews/:reviewId
  *@access      Private
  */
 export const updateReview = asyncHandler(async (req, res, next) => {
@@ -56,7 +57,7 @@ export const updateReview = asyncHandler(async (req, res, next) => {
 
   const review = await reviewService.update({
     userId: req.user._id,
-    reviewId: req.params.id,
+    reviewId: req.params.reviewId,
     verifiedFields,
   });
 
@@ -65,7 +66,7 @@ export const updateReview = asyncHandler(async (req, res, next) => {
 
 /**
  *@desc        Delete Review
- *@route       DELETE /api/v1/reviews/:id
+ *@route       DELETE /api/v1/reviews/:reviewId
  *@access      Private
  */
 export const deleteReview = asyncHandler(async (req, res, next) => {
@@ -74,7 +75,7 @@ export const deleteReview = asyncHandler(async (req, res, next) => {
   await reviewService.deleteReview({
     userId: _id,
     userRole: role,
-    reviewId: req.params.id,
+    reviewId: req.params.reviewId,
   });
 
   res.status(204).send();

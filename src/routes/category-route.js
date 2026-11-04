@@ -22,7 +22,7 @@ router.use("/:categoryId/subCategories", nestedSubCategoryRouter);
 router.get("/", categoryController.getAllCategories);
 
 router.get(
-  "/:id",
+  "/:categoryId",
   categoryValidator.getCategoryValidator,
   categoryController.getCategory,
 );
@@ -40,7 +40,7 @@ router.post(
 );
 
 router
-  .route("/:id")
+  .route("/:categoryId")
   .patch(
     uploadCoverImage,
     categoryValidator.updateCategoryValidator,

@@ -51,7 +51,7 @@ router
   );
 
 router
-  .route("/:id")
+  .route("/:userId")
   .get(userValidator.getUserValidator, userController.getUser)
   .patch(
     uploadCoverImage,
@@ -62,13 +62,13 @@ router
   .delete(userValidator.deleteUserValidator, userController.deleteUser);
 
 router.patch(
-  "/:id/role",
+  "/:userId/role",
   userValidator.updateUserRoleValidator,
   userController.updateUserRole,
 );
 
 router.patch(
-  "/:id/deactivate",
+  "/:userId/deactivate",
   userValidator.deactivateUserValidator,
   userController.deactivateUser,
 );

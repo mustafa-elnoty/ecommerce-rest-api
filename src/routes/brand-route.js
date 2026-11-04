@@ -17,7 +17,11 @@ const router = express.Router();
 
 // Public
 router.get("/", brandController.getBrands);
-router.get("/:id", brandValidator.getBrandValidator, brandController.getBrand);
+router.get(
+  "/:brandId",
+  brandValidator.getBrandValidator,
+  brandController.getBrand,
+);
 
 // Private (Admin)
 router.use(authMiddleware.protect);
@@ -32,7 +36,7 @@ router.post(
 );
 
 router
-  .route("/:id")
+  .route("/:brandId")
   .patch(
     uploadCoverImage,
     brandValidator.updateBrandValidator,

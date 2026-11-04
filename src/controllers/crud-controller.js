@@ -17,9 +17,14 @@ export const getDocs = ({ service }) =>
     });
   });
 
-export const getDoc = ({ service, populateOptions, getIdFromUser = false }) =>
+export const getDoc = ({
+  service,
+  fieldParamId,
+  populateOptions,
+  getIdFromUser = false,
+}) =>
   asyncHandler(async (req, res, next) => {
-    const id = getIdFromUser ? req.user._id : req.params.id;
+    const id = getIdFromUser ? req.user._id : req.params[fieldParamId];
 
     const doc = await service.getDoc({
       id,
@@ -42,13 +47,14 @@ export const create = ({ service, fieldsToCreate }) =>
 
 export const update = ({
   service,
+  fieldParamId,
   fieldsToUpdate,
   imageField,
   folderName,
   getIdFromUser = false,
 }) =>
   asyncHandler(async (req, res, next) => {
-    const id = getIdFromUser ? req.user._id : req.params.id;
+    const id = getIdFromUser ? req.user._id : req.params[fieldParamId];
 
     const oldDoc = imageField
       ? await service.getById({ id, fields: imageField })
@@ -72,11 +78,9 @@ export const update = ({
     });
   });
 
-export const del = ({ service, imageFields, folderName }) =>
+export const del = ({ service, fieldParamId, imageFields, folderName }) =>
   asyncHandler(async (req, res, next) => {
-    const { id } = req.params;
-
-    const doc = await service.del({ id });
+    const doc = await service.del({ id: req.params[fieldParamId] });
 
     res.status(204).send();
 
