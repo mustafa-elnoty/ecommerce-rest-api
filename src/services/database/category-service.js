@@ -13,6 +13,6 @@ export const getDocs = factory.getDocs({
   selectFields: categoryFields.ALLOWED_CATEGORY_SELECT_FIELDS,
 });
 export const getDoc = factory.getDoc(crudConfig);
-export const create = factory.create(crudConfig);
+export const create = factory.create({ Model: categoryModel });
 export const update = factory.update(crudConfig);
 export const del = factory.del(crudConfig);

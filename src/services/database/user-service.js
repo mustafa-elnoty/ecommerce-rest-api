@@ -18,7 +18,7 @@ export const getDocs = factory.getDocs({
 export const getDoc = factory.getDoc(crudConfig);
 export const del = factory.del(crudConfig);
 export const getById = factory.getById(crudConfig);
-export const create = factory.create(crudConfig);
+export const create = factory.create({ Model: userModel });
 export const update = factory.update(crudConfig);
 
 export const updateRole = async ({ id, role }) => {

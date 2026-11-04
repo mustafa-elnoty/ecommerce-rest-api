@@ -13,7 +13,7 @@ export const getDocs = factory.getDocs({
   selectFields: couponFields.ALLOWED_COUPON_SELECT_FIELDS,
 });
 export const getDoc = factory.getDoc(crudConfig);
-export const create = factory.create(crudConfig);
+export const create = factory.create({ Model: couponModel });
 export const del = factory.del(crudConfig);
 
 export const update = async ({ id, fieldsToUpdate }) => {

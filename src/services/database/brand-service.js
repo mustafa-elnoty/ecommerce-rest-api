@@ -13,6 +13,6 @@ export const getDocs = factory.getDocs({
   selectFields: brandFields.ALLOWED_BRAND_SELECT_FIELDS,
 });
 export const getDoc = factory.getDoc(crudConfig);
-export const create = factory.create(crudConfig);
+export const create = factory.create({ Model: brandModel });
 export const update = factory.update(crudConfig);
 export const del = factory.del(crudConfig);
