@@ -64,6 +64,7 @@ export const update = ({
       id,
       fieldsToUpdate: pickAllowedFields(fieldsToUpdate, req.body),
       processedImage: req.processedImage,
+      processedImages: req.processedImages,
     });
 
     res.status(200).json({ data: doc });

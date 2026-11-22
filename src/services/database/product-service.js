@@ -15,7 +15,7 @@ export const deleteImage = factory.deleteImage(crudConfig);
 
 export const validateProductRelations = async ({
   category,
-  subCategoriesIds,
+  subCategories,
   currentProduct,
 }) => {
   if (category) {
@@ -28,7 +28,7 @@ export const validateProductRelations = async ({
     category && String(category) !== String(currentProduct?.category);
 
   const idsToCheck =
-    subCategoriesIds ??
+    subCategories ??
     (categoryChanged ? currentProduct?.subCategories : undefined);
 
   if (!idsToCheck?.length) return;
@@ -62,24 +62,11 @@ export const getDocs = factory.getDocs({
   selectFields: productFields.ALLOWED_PRODUCT_SELECT_FIELDS,
 });
 
-export const getDoc = async ({
-  productId,
-  includeDeleted = false,
-  populateOptions,
-}) => {
-  const filter = { _id: productId };
-  if (!includeDeleted) filter.isDeleted = false;
-
-  const query = productModel.findOne(filter);
-
-  if (populateOptions) query.populate(populateOptions);
-
-  const product = await query;
-
-  if (!product) throw new ApiError(`Product not found`, 404);
-
-  return product;
-};
+export const getDoc = factory.getDoc({
+  Model: productModel,
+  modelName: "Product",
+  baseFilter: { isDeleted: false },
+});
 
 export const create = async ({
   fieldsToCreate,
@@ -88,7 +75,7 @@ export const create = async ({
 }) => {
   const { category, subCategories } = fieldsToCreate;
 
-  await validateProductRelations({ category, subCategoriesIds: subCategories });
+  await validateProductRelations({ category, subCategories });
 
   return factory.create({ Model: productModel })({
     fieldsToCreate,
@@ -109,7 +96,7 @@ export const update = async ({ productId, fieldsToUpdate, processedImage }) => {
 
   await validateProductRelations({
     category,
-    subCategoriesIds: subCategories,
+    subCategories,
     currentProduct: product,
   });
 

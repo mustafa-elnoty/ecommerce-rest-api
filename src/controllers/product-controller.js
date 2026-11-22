@@ -25,13 +25,10 @@ export const getProducts = factory.getDocs({ service: productService });
  *@route       GET /api/v1/products/:productId
  *@access      Public
  */
-export const getProduct = asyncHandler(async (req, res, next) => {
-  const doc = await productService.getDoc({
-    productId: req.params.productId,
-    populateOptions,
-  });
-
-  res.status(200).json({ data: doc });
+export const getProduct = factory.getDoc({
+  service: productService,
+  fieldParamId: "productId",
+  populateOptions,
 });
 
 /**
@@ -63,26 +60,10 @@ export const createProduct = asyncHandler(async (req, res, next) => {
  *@route       PATCH /api/v1/products/:productId
  *@access      Private
  */
-export const updateProduct = asyncHandler(async (req, res, next) => {
-  const fieldsToUpdate = pickAllowedFields(
-    productFields.ALLOWED_PRODUCT_UPDATE_FIELDS,
-    req.body,
-  );
-
-  const doc = await productService.update({
-    productId: req.params.productId,
-    fieldsToUpdate,
-    processedImage: req.processedImage,
-  });
-
-  res.status(200).json({ data: doc });
-
-  // res.on("finish", () => {
-  //   const oldValue = req.currentProduct.imageCover;
-  //   const newValue = doc.imageCover;
-
-  //   deleteOldSingleImage(oldValue, newValue, "products");
-  // });
+export const updateProduct = factory.update({
+  service: productService,
+  fieldParamId: "productId",
+  fieldsToUpdate: productFields.ALLOWED_PRODUCT_UPDATE_FIELDS,
 });
 
 /**

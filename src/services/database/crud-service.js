@@ -58,11 +58,11 @@ export const getDocs =
   };
 
 export const getDoc =
-  ({ Model, modelName = "Document", defaultFields }) =>
+  ({ Model, modelName = "Document", baseFilter = {}, defaultFields }) =>
   async ({ id, populateOptions }) => {
-    const query = Model.findOne({ _id: id });
+    const query = Model.findOne({ _id: id, ...baseFilter });
 
-    if (populateOptions) query.customPopulate(populateOptions);
+    if (populateOptions) query.populate(populateOptions);
 
     if (defaultFields) query.select(defaultFields);
 
@@ -85,10 +85,10 @@ export const create =
   };
 
 export const update =
-  ({ Model, modelName = "Document" }) =>
+  ({ Model, modelName = "Document", baseFilter = {} }) =>
   async ({ id, fieldsToUpdate, processedImage, processedImages }) => {
     const doc = await Model.findOneAndUpdate(
-      { _id: id },
+      { _id: id, ...baseFilter },
       { $set: fieldsToUpdate },
       {
         returnDocument: "after",
