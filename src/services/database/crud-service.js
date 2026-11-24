@@ -87,21 +87,18 @@ export const create =
 export const update =
   ({ Model, modelName = "Document", baseFilter = {} }) =>
   async ({ id, fieldsToUpdate, processedImage, processedImages }) => {
-    const doc = await Model.findOneAndUpdate(
+    const result = await Model.updateOne(
       { _id: id, ...baseFilter },
       { $set: fieldsToUpdate },
       {
-        returnDocument: "after",
         runValidators: true,
       },
     );
 
-    if (!doc) throw new ApiError(`${modelName} not found`, 404);
+    if (!result.matchedCount) throw new ApiError(`${modelName} not found`, 404);
 
     if (processedImage) await writeProcessedFiles([processedImage]);
     if (processedImages) await writeProcessedFiles(processedImages);
-
-    return doc;
   };
 
 export const del =

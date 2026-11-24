@@ -60,14 +60,14 @@ export const update = ({
       ? await service.getById({ id, fields: imageField })
       : null;
 
-    const doc = await service.update({
+    await service.update({
       id,
       fieldsToUpdate: pickAllowedFields(fieldsToUpdate, req.body),
       processedImage: req.processedImage,
       processedImages: req.processedImages,
     });
 
-    res.status(200).json({ data: doc });
+    res.sendStatus(204);
 
     if (!imageField || !folderName) return;
 
