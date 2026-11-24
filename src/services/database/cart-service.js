@@ -173,8 +173,6 @@ export const updateQuantity = async ({
       )
       .lean();
 
-    console.log(cart);
-
     if (!cart) throw new ApiError("Item not in cart", 404);
 
     const newQuantity = cart.items[0].quantity + quantity;
