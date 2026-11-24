@@ -1,5 +1,6 @@
 import authRouter from "./auth-route.js";
 import userRouter from "./user-route.js";
+import profileRouter from "./profile-route.js";
 import categoryRouter from "./category-route.js";
 import { standaloneSubCategoryRouter } from "./subcategory-route.js";
 import brandRouter from "./brand-route.js";
@@ -13,6 +14,7 @@ import cartRouter from "./cart-route.js";
 const mountRoutes = (app) => {
   app.use("/api/v1/auth", authRouter);
   app.use("/api/v1/users", userRouter);
+  app.use("/api/v1/profile", profileRouter);
   app.use("/api/v1/categories", categoryRouter);
   app.use("/api/v1/subcategories", standaloneSubCategoryRouter);
   app.use("/api/v1/brands", brandRouter);
