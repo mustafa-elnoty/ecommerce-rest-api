@@ -1,76 +1,30 @@
 import express from "express";
 
 import * as authMiddleware from "../middlewares/auth-middleware.js";
-import * as multerUploadMiddleware from "../middlewares/multer-upload-middleware.js";
-import * as localUploadMiddleware from "../middlewares/local-upload-middleware.js";
 import * as userValidator from "../validators/user-validator.js";
 import * as userController from "../controllers/user-controller.js";
 
-const uploadCoverImage =
-  multerUploadMiddleware.uploadSingleImage("profileImage");
-
-const resizeCoverImage = localUploadMiddleware.uploadSingleImageToLocalStorage(
-  "profileImage",
-  "users",
-);
-
 const router = express.Router();
 
-// Protect (Users)
-router.use(authMiddleware.protect);
+router.use(authMiddleware.protect, authMiddleware.allowedTo("admin"));
 
-router.get("/profile", userController.getProfile);
-
-router.patch(
-  "/profile-update",
-  uploadCoverImage,
-  userValidator.updateProfileValidator,
-  resizeCoverImage,
-  userController.updateProfile,
-);
-
-router.patch(
-  "/profile/update-password",
-  userValidator.updateProfilePasswordValidator,
-  userController.updateProfilePassword,
-);
-
-router.patch("/profile/deactivate", userController.deactivateProfile);
-
-// Private (Admin)
-router.use(authMiddleware.allowedTo("admin"));
-
-router
-  .route("/")
-  .get(userController.getUsers)
-  .post(
-    uploadCoverImage,
-    userValidator.createUserValidator,
-    resizeCoverImage,
-    userController.createUser,
-  );
+router.route("/").get(userController.getUsers);
 
 router
   .route("/:userId")
-  .get(userValidator.getUserValidator, userController.getUser)
-  .patch(
-    uploadCoverImage,
-    userValidator.updateUserValidator,
-    resizeCoverImage,
-    userController.updateUser,
-  )
-  .delete(userValidator.deleteUserValidator, userController.deleteUser);
+  .get(userValidator.getUser, userController.getUser)
+  .delete(userValidator.deleteUser, userController.deleteUser);
 
 router.patch(
   "/:userId/role",
-  userValidator.updateUserRoleValidator,
+  userValidator.updateUserRole,
   userController.updateUserRole,
 );
 
 router.patch(
-  "/:userId/deactivate",
-  userValidator.deactivateUserValidator,
-  userController.deactivateUser,
+  "/:userId/activeStatus",
+  userValidator.updateUserActiveStatus,
+  userController.updateUserActiveStatus,
 );
 
 export default router;
