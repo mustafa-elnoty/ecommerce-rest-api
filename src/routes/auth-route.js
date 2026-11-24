@@ -11,21 +11,21 @@ router.post(
   authController.registerUser,
 );
 router.post("/login", authValidator.loginValidator, authController.login);
-router.post("/refresh-token", authController.refreshAccessToken);
+router.post("/refreshAccessToken", authController.refreshAccessToken);
 router.post("/logout", authController.logout);
 
 router.post(
-  "/forgot-password",
+  "/forgotPassword",
   authValidator.forgotPasswordValidator,
   authController.forgotPassword,
 );
 router.post(
-  "/verify-reset-code",
+  "/verifyResetCode",
   authValidator.verifyResetCodeValidator,
   authController.verifyResetCode,
 );
 router.patch(
-  "/reset-password",
+  "/resetPassword",
   authValidator.resetPasswordValidator,
   authController.resetPassword,
 );
