@@ -1,19 +1,7 @@
 import { param, body } from "express-validator";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-const mongoIdParam = (name) =>
-  param(name).isMongoId().withMessage(`Invalid ${name}`);
-
-export const addItemValidator = [
-  mongoIdParam("productId"),
-  mongoIdParam("variantId"),
-  validatorMiddleware,
-];
-
-export const updateQuantityValidator = [
-  mongoIdParam("productId"),
-  mongoIdParam("variantId"),
-
+const quantity = () =>
   body("quantity")
     .notEmpty()
     .withMessage("Quantity is required")
@@ -21,7 +9,22 @@ export const updateQuantityValidator = [
     .withMessage("Quantity must be an integer")
     .custom((value) => Number(value) !== 0)
     .withMessage("Quantity must not be zero")
-    .toInt(),
+    .toInt();
+
+const mongoIdParam = (name) =>
+  param(name).isMongoId().withMessage(`Invalid ${name} id format`);
+
+export const addItemValidator = [
+  mongoIdParam("productId"),
+  mongoIdParam("variantId"),
+
+  validatorMiddleware,
+];
+
+export const updateQuantityValidator = [
+  mongoIdParam("productId"),
+  mongoIdParam("variantId"),
+  quantity(),
 
   validatorMiddleware,
 ];

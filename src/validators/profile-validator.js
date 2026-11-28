@@ -54,7 +54,7 @@ const newPasswordConfirm = () =>
       return true;
     });
 
-export const updateProfile = [
+export const updateProfileValidator = [
   requireAtLeastOneField(PROFILE_FIELDS),
 
   firstName(),
@@ -65,7 +65,7 @@ export const updateProfile = [
   validatorMiddleware,
 ];
 
-export const updatePassword = [
+export const updatePasswordValidator = [
   currentPassword(),
   newPassword(),
   newPasswordConfirm(),

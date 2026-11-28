@@ -1,18 +1,16 @@
 import { body, param } from "express-validator";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-export const addProductValidator = [
+const productId = () =>
   body("productId")
     .notEmpty()
     .withMessage("Product id is required")
     .isMongoId()
-    .withMessage("Invalid product id format"),
+    .withMessage("Invalid product id format");
 
-  validatorMiddleware,
-];
+const productIdParam = () =>
+  param("productId").isMongoId().withMessage("Invalid product id format");
 
-export const removeProductValidator = [
-  param("productId").isMongoId().withMessage("Invalid product id format"),
+export const addProductValidator = [productId(), validatorMiddleware];
 
-  validatorMiddleware,
-];
+export const removeProductValidator = [productIdParam(), validatorMiddleware];

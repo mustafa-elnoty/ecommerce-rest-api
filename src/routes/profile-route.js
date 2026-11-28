@@ -23,14 +23,14 @@ router.get("/", profileController.getProfile);
 router.patch(
   "/",
   uploadCoverImage,
-  profileValidator.updateProfile,
+  profileValidator.updateProfileValidator,
   resizeCoverImage,
   profileController.updateProfile,
 );
 
 router.patch(
   "/password",
-  profileValidator.updatePassword,
+  profileValidator.updatePasswordValidator,
   profileController.updatePassword,
 );
 

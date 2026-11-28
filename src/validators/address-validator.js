@@ -5,29 +5,29 @@ import requireAtLeastOneField from "../utils/require-at-least-one-field.js";
 import requiredOrOptional from "../helpers/required-or-optional.js";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-const aliasValidator = (isRequired = false) =>
+const alias = (isRequired = false) =>
   requiredOrOptional("alias", isRequired, "You must enter the alias")
     .isLength({ min: 2, max: 50 })
     .withMessage("Alias must be between 2 and 50 characters");
 
-const detailsValidator = (isRequired = false) =>
+const details = (isRequired = false) =>
   requiredOrOptional("details", isRequired, "You must enter the details")
     .isLength({ min: 5, max: 200 })
     .withMessage("Details must be between 5 and 200 characters");
 
-const cityValidator = (isRequired = false) =>
+const city = (isRequired = false) =>
   requiredOrOptional("city", isRequired, "You must enter the city")
     .isLength({ min: 2, max: 50 })
     .withMessage("City must be between 2 and 50 characters");
 
-const landmarkValidator = () =>
+const landmark = () =>
   body("landmark")
     .trim()
     .optional()
     .isLength({ min: 3, max: 100 })
     .withMessage("Landmark must be between 3 and 100 characters");
 
-const recipientFirstNameValidator = (isRequired = false) =>
+const recipientFirstName = (isRequired = false) =>
   requiredOrOptional(
     "recipientFirstName",
     isRequired,
@@ -36,7 +36,7 @@ const recipientFirstNameValidator = (isRequired = false) =>
     .isLength({ min: 2, max: 50 })
     .withMessage("Recipient first name must be between 2 and 50 characters");
 
-const recipientLastNameValidator = (isRequired = false) =>
+const recipientLastName = (isRequired = false) =>
   requiredOrOptional(
     "recipientLastName",
     isRequired,
@@ -45,7 +45,7 @@ const recipientLastNameValidator = (isRequired = false) =>
     .isLength({ min: 2, max: 50 })
     .withMessage("Recipient last name must be between 2 and 50 characters");
 
-const phoneValidator = (isRequired = false) =>
+const phone = (isRequired = false) =>
   requiredOrOptional(
     "phone",
     isRequired,
@@ -54,45 +54,39 @@ const phoneValidator = (isRequired = false) =>
     .isMobilePhone(["ar-EG"])
     .withMessage("Phone number must be a valid Egyptian mobile number");
 
-const addressIdParamValidator = () =>
+const addressIdParam = () =>
   param("addressId").isMongoId().withMessage("Invalid address id format");
 
 export const addAddressValidator = [
-  aliasValidator(true),
-  detailsValidator(true),
-  cityValidator(true),
-  landmarkValidator(),
-  recipientFirstNameValidator(true),
-  recipientLastNameValidator(true),
-  phoneValidator(true),
+  alias(true),
+  details(true),
+  city(true),
+  landmark(),
+  recipientFirstName(true),
+  recipientLastName(true),
+  phone(true),
 
   validatorMiddleware,
 ];
 
 export const updateAddressValidator = [
-  addressIdParamValidator(),
-
   requireAtLeastOneField(ALLOWED_ADDRESS_FIELDS),
 
-  aliasValidator(),
-  detailsValidator(),
-  cityValidator(),
-  landmarkValidator(),
-  recipientFirstNameValidator(),
-  recipientLastNameValidator(),
-  phoneValidator(),
+  addressIdParam(),
+  alias(),
+  details(),
+  city(),
+  landmark(),
+  recipientFirstName(),
+  recipientLastName(),
+  phone(),
 
   validatorMiddleware,
 ];
 
-export const removeAddressValidator = [
-  addressIdParamValidator(),
-
-  validatorMiddleware,
-];
+export const removeAddressValidator = [addressIdParam(), validatorMiddleware];
 
 export const setDefaultAddressValidator = [
-  addressIdParamValidator(),
-
+  addressIdParam(),
   validatorMiddleware,
 ];

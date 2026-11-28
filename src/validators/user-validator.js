@@ -18,30 +18,23 @@ const active = () =>
     .isBoolean()
     .withMessage("Active field must be a boolean value");
 
-export const getUser = [
-  param("id").isMongoId().withMessage("Invalid user id format"),
+const userIdParam = () =>
+  param("id").isMongoId().withMessage("Invalid user id format");
 
-  validatorMiddleware,
-];
+export const getUserValidator = [userIdParam(), validatorMiddleware];
 
-export const updateUserRole = [
-  param("id").isMongoId().withMessage("Invalid user id format"),
-
+export const updateUserRoleValidator = [
+  userIdParam(),
   role(),
 
   validatorMiddleware,
 ];
 
-export const updateUserActiveStatus = [
-  param("id").isMongoId().withMessage("Invalid user id format"),
-
+export const updateUserActiveStatusValidator = [
+  userIdParam(),
   active(),
 
   validatorMiddleware,
 ];
 
-export const deleteUser = [
-  param("id").isMongoId().withMessage("Invalid user id format"),
-
-  validatorMiddleware,
-];
+export const deleteUserValidator = [userIdParam(), validatorMiddleware];

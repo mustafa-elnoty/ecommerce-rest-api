@@ -12,18 +12,18 @@ router.route("/").get(userController.getUsers);
 
 router
   .route("/:userId")
-  .get(userValidator.getUser, userController.getUser)
-  .delete(userValidator.deleteUser, userController.deleteUser);
+  .get(userValidator.getUserValidator, userController.getUser)
+  .delete(userValidator.deleteUserValidator, userController.deleteUser);
 
 router.patch(
   "/:userId/role",
-  userValidator.updateUserRole,
+  userValidator.updateUserRoleValidator,
   userController.updateUserRole,
 );
 
 router.patch(
   "/:userId/activeStatus",
-  userValidator.updateUserActiveStatus,
+  userValidator.updateUserActiveStatusValidator,
   userController.updateUserActiveStatus,
 );
 

@@ -17,12 +17,12 @@ const preventUpdateIfUsed =
     return true;
   };
 
-const codeValidator = (isRequired = false) =>
+const code = (isRequired = false) =>
   requiredOrOptional("code", isRequired, "You must enter the coupon code")
     .isLength({ min: 3, max: 20 })
     .withMessage("Coupon code must be between 3 and 20 characters");
 
-const discountTypeValidator = (isRequired = false) =>
+const discountType = (isRequired = false) =>
   requiredOrOptional(
     "discountType",
     isRequired,
@@ -32,7 +32,7 @@ const discountTypeValidator = (isRequired = false) =>
     .isIn(["percentage", "fixed"])
     .withMessage("Discount type must be either percentage or fixed");
 
-const discountValueValidator = (isRequired = false) =>
+const discountValue = (isRequired = false) =>
   requiredOrOptional(
     "discountValue",
     isRequired,
@@ -53,7 +53,7 @@ const discountValueValidator = (isRequired = false) =>
       return true;
     });
 
-const maxDiscountValidator = () => [
+const maxDiscount = () => [
   body("maxDiscount")
     .if((_, { req }) => req.body.discountType === "percentage")
     .notEmpty()
@@ -74,7 +74,7 @@ const maxDiscountValidator = () => [
     .toFloat(),
 ];
 
-const startDateValidator = () =>
+const startDate = () =>
   body("startDate")
     .optional()
     .isISO8601()
@@ -90,88 +90,79 @@ const startDateValidator = () =>
       return true;
     });
 
-const minOrderValueValidator = () =>
+const minOrderValue = () =>
   body("minOrderValue")
     .optional()
     .isFloat({ min: 0 })
     .withMessage("Minimum order value can't be negative")
     .toFloat();
 
-const maxUsesValidator = () =>
+const maxUses = () =>
   body("maxUses")
     .optional()
     .isInt({ min: 1 })
     .withMessage("Max uses must be at least 1")
     .toInt();
 
-const expireValidator = (isRequired = false) =>
+const expire = (isRequired = false) =>
   requiredOrOptional("expire", isRequired, "You must enter the expiration date")
     .isISO8601()
     .withMessage("Expiration date must be a valid date")
     .toDate()
     .custom((value, { req }) => {
-      const startDate =
+      const currentStartDate =
         req.body.startDate || req.currentCoupon?.startDate
           ? new Date(req.body.startDate || req.currentCoupon?.startDate)
           : new Date();
 
-      if (new Date(value) <= startDate) {
+      if (new Date(value) <= currentStartDate) {
         throw new Error("Expiration date must be after the start date");
       }
 
       return true;
     });
 
-const isActiveValidator = () =>
+const isActive = () =>
   body("isActive")
     .optional()
     .isBoolean()
     .withMessage("isActive must be a boolean")
     .toBoolean();
 
-const couponIdParamValidator = () =>
-  param("id").isMongoId().withMessage("Invalid coupon id format");
+const couponIdParam = () =>
+  param("couponId").isMongoId().withMessage("Invalid coupon id format");
 
-export const getCouponValidator = [
-  couponIdParamValidator(),
-
-  validatorMiddleware,
-];
+export const getCouponValidator = [couponIdParam(), validatorMiddleware];
 
 export const createCouponValidator = [
-  codeValidator(true),
-  discountTypeValidator(true),
-  discountValueValidator(true),
-  ...maxDiscountValidator(),
-  startDateValidator(),
-  minOrderValueValidator(),
-  maxUsesValidator(),
-  expireValidator(true),
-  isActiveValidator(),
+  code(true),
+  discountType(true),
+  discountValue(true),
+  ...maxDiscount(),
+  startDate(),
+  minOrderValue(),
+  maxUses(),
+  expire(true),
+  isActive(),
 
   validatorMiddleware,
 ];
 
 export const updateCouponValidator = [
-  couponIdParamValidator(),
-
   requireAtLeastOneField(ALLOWED_COUPON_FIELDS),
 
-  codeValidator(),
-  discountTypeValidator(),
-  discountValueValidator(),
-  ...maxDiscountValidator(),
-  startDateValidator(),
-  minOrderValueValidator(),
-  maxUsesValidator(),
-  expireValidator(),
-  isActiveValidator(),
+  couponIdParam(),
+  code(),
+  discountType(),
+  discountValue(),
+  ...maxDiscount(),
+  startDate(),
+  minOrderValue(),
+  maxUses(),
+  expire(),
+  isActive(),
 
   validatorMiddleware,
 ];
 
-export const deleteCouponValidator = [
-  couponIdParamValidator(),
-
-  validatorMiddleware,
-];
+export const deleteCouponValidator = [couponIdParam(), validatorMiddleware];

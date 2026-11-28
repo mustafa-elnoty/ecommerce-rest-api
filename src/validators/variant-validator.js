@@ -5,13 +5,7 @@ import requireAtLeastOneField from "../utils/require-at-least-one-field.js";
 import requiredOrOptional from "../helpers/required-or-optional.js";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-const productIdParam = () =>
-  param("productId").isMongoId().withMessage("Invalid product id");
-
-const variantIdParam = () =>
-  param("variantId").isMongoId().withMessage("Invalid variant id");
-
-const colorValidator = () =>
+const color = () =>
   body("color")
     .optional()
     .isString()
@@ -20,7 +14,7 @@ const colorValidator = () =>
     .withMessage("Color can't be empty")
     .toLowerCase();
 
-const sizeValidator = () =>
+const size = () =>
   body("size")
     .optional()
     .isString()
@@ -29,37 +23,42 @@ const sizeValidator = () =>
     .withMessage("Size can't be empty")
     .toUpperCase();
 
-const quantityValidator = (isRequired = false) =>
+const quantity = (isRequired = false) =>
   requiredOrOptional("quantity", isRequired, "Quantity is required")
     .isInt({ min: 0 })
     .withMessage("Quantity must be an integer >= 0")
     .toInt();
 
-const isAvailableValidator = () =>
+const isAvailable = () =>
   body("isAvailable")
     .optional()
     .isBoolean()
     .withMessage("isAvailable must be a boolean value")
     .toBoolean();
 
+const productIdParam = () =>
+  param("productId").isMongoId().withMessage("Invalid product id");
+
+const variantIdParam = () =>
+  param("variantId").isMongoId().withMessage("Invalid variant id");
+
 export const addVariantValidator = [
   productIdParam(),
-  colorValidator(),
-  sizeValidator(),
-  quantityValidator(true),
-  isAvailableValidator(),
+  color(),
+  size(),
+  quantity(true),
+  isAvailable(),
 
   validatorMiddleware,
 ];
 
 export const updateVariantValidator = [
-  productIdParam(),
-  variantIdParam(),
-
   requireAtLeastOneField(ALLOWED_VARIANT_UPDATE_FIELDS),
 
-  isAvailableValidator(),
-  quantityValidator(),
+  productIdParam(),
+  variantIdParam(),
+  isAvailable(),
+  quantity(),
 
   validatorMiddleware,
 ];

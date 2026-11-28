@@ -1,7 +1,7 @@
 import { body } from "express-validator";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-const emailValidator = () =>
+const email = () =>
   body("email")
     .trim()
     .notEmpty()
@@ -9,7 +9,7 @@ const emailValidator = () =>
     .isEmail()
     .withMessage("Invalid email format");
 
-const passwordValidator = () =>
+const password = () =>
   body("password")
     .trim()
     .notEmpty()
@@ -17,65 +17,47 @@ const passwordValidator = () =>
     .isLength({ min: 8 })
     .withMessage("Password must be at least 8 characters");
 
-export const registerValidator = [
+const firstName = () =>
   body("firstName")
     .trim()
     .notEmpty()
     .withMessage("You must enter your first name")
     .isLength({ min: 2, max: 50 })
-    .withMessage("First name must be between 2 and 50"),
+    .withMessage("First name must be between 2 and 50");
 
+const lastName = () =>
   body("lastName")
     .trim()
     .notEmpty()
     .withMessage("You must enter your last name")
     .isLength({ min: 2, max: 50 })
-    .withMessage("Last name must be between 2 and 50"),
+    .withMessage("Last name must be between 2 and 50");
 
-  emailValidator(),
-  passwordValidator(),
-
-  validatorMiddleware,
-];
-
-export const loginValidator = [
-  emailValidator(),
-
-  passwordValidator(),
-
-  validatorMiddleware,
-];
-
-export const forgotPasswordValidator = [emailValidator(), validatorMiddleware];
-
-export const verifyResetCodeValidator = [
-  emailValidator(),
-
+const resetCode = () =>
   body("resetCode")
     .trim()
     .notEmpty()
     .withMessage("Reset code is required")
     .isLength({ min: 6, max: 6 })
-    .withMessage("Reset code must be 6 digits"),
+    .withMessage("Reset code must be 6 digits");
 
-  validatorMiddleware,
-];
-
-export const resetPasswordValidator = [
+const resetToken = () =>
   body("resetToken")
     .trim()
     .notEmpty()
     .withMessage("Reset token is required")
     .isLength({ min: 64, max: 64 })
-    .withMessage("Invalid or expire reset token"),
+    .withMessage("Invalid or expire reset token");
 
+const newPassword = () =>
   body("newPassword")
     .trim()
     .notEmpty()
     .withMessage("New password is required")
     .isLength({ min: 8 })
-    .withMessage("The password must be at least 8 characters long"),
+    .withMessage("The password must be at least 8 characters long");
 
+const newPasswordConfirm = () =>
   body("newPasswordConfirm")
     .trim()
     .notEmpty()
@@ -84,7 +66,31 @@ export const resetPasswordValidator = [
       if (val !== req.body.newPassword)
         throw new Error("Password confirmation does not match new password");
       return true;
-    }),
+    });
+
+export const registerValidator = [
+  firstName(),
+  lastName(),
+  email(),
+  password(),
+
+  validatorMiddleware,
+];
+
+export const loginValidator = [email(), password(), validatorMiddleware];
+
+export const forgotPasswordValidator = [email(), validatorMiddleware];
+
+export const verifyResetCodeValidator = [
+  email(),
+  resetCode(),
+  validatorMiddleware,
+];
+
+export const resetPasswordValidator = [
+  resetToken(),
+  newPassword(),
+  newPasswordConfirm(),
 
   validatorMiddleware,
 ];

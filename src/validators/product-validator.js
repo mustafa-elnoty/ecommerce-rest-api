@@ -6,12 +6,12 @@ import requireAtLeastOneField from "../utils/require-at-least-one-field.js";
 import requiredOrOptional from "../helpers/required-or-optional.js";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-const titleValidator = (isRequired = false) =>
+const title = (isRequired = false) =>
   requiredOrOptional("title", isRequired, "You must enter the title")
     .isLength({ min: 3, max: 500 })
     .withMessage("product title must be between 3 and 500");
 
-const descriptionValidator = (isRequired = false) =>
+const description = (isRequired = false) =>
   requiredOrOptional(
     "description",
     isRequired,
@@ -20,26 +20,26 @@ const descriptionValidator = (isRequired = false) =>
     .isLength({ min: 20, max: 2000 })
     .withMessage("Product description must be between 20 and 2000");
 
-const quantityValidator = (isRequired = false) =>
+const quantity = (isRequired = false) =>
   requiredOrOptional("quantity", isRequired, "You must enter the quantity")
     .isInt({ min: 0 })
     .withMessage("Product quantity can't be negative")
     .toInt();
 
-const priceValidator = (isRequired = false) =>
+const price = (isRequired = false) =>
   requiredOrOptional("price", isRequired, "You must enter the price")
     .isFloat({ min: 0.01, max: 1e6 })
     .withMessage("Price must be between 0.01 and 1,000,000")
     .toFloat();
 
-const discountPercentageValidator = ({ min, msg }) =>
+const discountPercentage = ({ min, msg }) =>
   body("discountPercentage")
     .optional()
     .isInt({ min, max: 100 })
     .withMessage(msg)
     .toInt();
 
-const variantValidator = () => [
+const variant = () => [
   body("variants")
     .isArray({ min: 1 })
     .withMessage("variants must be a non-empty array"),
@@ -70,7 +70,7 @@ const variantValidator = () => [
     .toBoolean(),
 ];
 
-const imagesValidator = (isRequired = false) =>
+const images = (isRequired = false) =>
   body("images")
     .optional()
     .custom((val, { req }) => {
@@ -83,7 +83,7 @@ const imagesValidator = (isRequired = false) =>
       return true;
     });
 
-const categoryValidator = (isRequired = false) =>
+const category = (isRequired = false) =>
   requiredOrOptional(
     "category",
     isRequired,
@@ -92,7 +92,7 @@ const categoryValidator = (isRequired = false) =>
     .isMongoId()
     .withMessage("Invalid category id format");
 
-const subCategoriesValidator = () =>
+const subCategories = () =>
   body("subCategories")
     .optional()
     .isArray({ min: 1 })
@@ -108,29 +108,28 @@ const subCategoriesValidator = () =>
       return true;
     });
 
-const brandValidator = () =>
+const brand = () =>
   body("brand").optional().isMongoId().withMessage("Invalid brand id format");
 
-export const getProductValidator = [
-  param("productId").isMongoId().withMessage("Invalid product id format"),
+const productIdParam = () =>
+  param("productId").isMongoId().withMessage("Invalid product id format");
 
-  validatorMiddleware,
-];
+export const getProductValidator = [productIdParam(), validatorMiddleware];
 
 export const createProductValidator = [
-  titleValidator(true),
-  descriptionValidator(true),
-  quantityValidator(true),
-  priceValidator(true),
-  discountPercentageValidator({
+  title(true),
+  description(true),
+  quantity(true),
+  price(true),
+  discountPercentage({
     min: 1,
     msg: "Discount percentage must be between 1 and 100",
   }),
-  ...variantValidator(),
-  imagesValidator(),
-  categoryValidator(true),
-  subCategoriesValidator(),
-  brandValidator(),
+  ...variant(),
+  images(),
+  category(true),
+  subCategories(),
+  brand(),
 
   body("imageCover").custom((val, { req }) => {
     if (!req.files?.imageCover)
@@ -146,33 +145,29 @@ export const createProductValidator = [
 ];
 
 export const updateProductValidator = [
-  param("productId").isMongoId().withMessage("Invalid product id format"),
+  productIdParam(),
 
   requireAtLeastOneField(ALLOWED_PRODUCT_UPDATE_FIELDS),
 
-  titleValidator(),
-  descriptionValidator(),
-  quantityValidator(),
-  priceValidator(),
-  discountPercentageValidator({
+  title(),
+  description(),
+  quantity(),
+  price(),
+  discountPercentage({
     min: 0,
     msg: "Discount percentage must be between 0 and 100",
   }),
-  categoryValidator(),
-  subCategoriesValidator(),
-  brandValidator(),
+  category(),
+  subCategories(),
+  brand(),
 
   validatorMiddleware,
 ];
 
-export const deleteProductValidator = [
-  param("id").isMongoId().withMessage("Invalid product id format"),
-
-  validatorMiddleware,
-];
+export const deleteProductValidator = [productIdParam(), validatorMiddleware];
 
 export const deleteProductImageValidator = [
-  param("id").isMongoId().withMessage("Invalid product id format"),
+  productIdParam(),
 
   param("imageName")
     .isString()
@@ -185,9 +180,9 @@ export const deleteProductImageValidator = [
 ];
 
 export const addProductImagesValidator = [
-  param("id").isMongoId().withMessage("Invalid product id format"),
+  productIdParam(),
 
-  imagesValidator(true),
+  images(true),
 
   validatorMiddleware,
 ];

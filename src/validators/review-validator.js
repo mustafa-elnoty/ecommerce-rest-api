@@ -5,53 +5,46 @@ import requireAtLeastOneField from "../utils/require-at-least-one-field.js";
 import requiredOrOptional from "../helpers/required-or-optional.js";
 import validatorMiddleware from "../middlewares/validator-middleware.js";
 
-const titleValidator = () =>
+const title = () =>
   body("title")
     .trim()
     .optional()
     .isLength({ min: 4, max: 400 })
     .withMessage("Title must be between 4 and 400 characters");
 
-const ratingValidator = (isRequired = false) =>
+const rating = (isRequired = false) =>
   requiredOrOptional("rating", isRequired, "Rating is required")
     .isFloat({ min: 1, max: 5 })
     .withMessage("Rating must be between 1.0 and 5.0")
     .toFloat();
 
-export const getReviewsValidator = [
-  param("productId").isMongoId().withMessage("Invalid productId format"),
+const reviewIdParam = () =>
+  param("reviewId").isMongoId().withMessage("Invalid review id format");
 
-  validatorMiddleware,
-];
+const productParamId = () =>
+  param("productId").isMongoId().withMessage("Invalid product id format");
 
-export const getReviewValidator = [
-  param("id").isMongoId().withMessage("Invalid review id"),
+export const getReviewsValidator = [productParamId(), validatorMiddleware];
 
-  validatorMiddleware,
-];
+export const getReviewValidator = [reviewIdParam(), validatorMiddleware];
 
 export const createReviewValidator = [
-  param("productId").isMongoId().withMessage("Invalid product id"),
+  productParamId(),
 
-  titleValidator(),
-  ratingValidator(true),
+  title(),
+  rating(true),
 
   validatorMiddleware,
 ];
 
 export const updateReviewValidator = [
-  param("id").isMongoId().withMessage("Invalid review id"),
-
   requireAtLeastOneField(ALLOWED_REVIEW_FIELDS),
 
-  titleValidator(),
-  ratingValidator(),
+  reviewIdParam(),
+  title(),
+  rating(),
 
   validatorMiddleware,
 ];
 
-export const deleteReviewValidator = [
-  param("id").isMongoId().withMessage("Invalid review id"),
-
-  validatorMiddleware,
-];
+export const deleteReviewValidator = [reviewIdParam(), validatorMiddleware];
