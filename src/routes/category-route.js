@@ -19,7 +19,7 @@ const router = express.Router();
 router.use("/:categoryId/subCategories", nestedSubCategoryRouter);
 
 // Public
-router.get("/", categoryController.getAllCategories);
+router.get("/", categoryController.getCategories);
 
 router.get(
   "/:categoryId",
