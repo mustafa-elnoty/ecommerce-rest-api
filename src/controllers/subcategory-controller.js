@@ -7,31 +7,16 @@ import * as subCategoriesFields from "../constants/subcategory-fields.js";
 
 const populateOptions = { path: "category", select: "name slug" };
 
-/**
- *@desc        Get SubCategories
- *@route       GET /api/v1/categories/:categoryId/subcategories
- *@access      Public
- */
 export const getSubCategories = factory.getDocs({
   service: subCategoryService,
 });
 
-/**
- *@desc        Get SubCategories
- *@route       GET /api/v1/subcategories/:subCategoryId
- *@access      Public
- */
 export const getSubCategory = factory.getDoc({
   service: subCategoryService,
   fieldParamId: "subCategoryId",
   populateOptions,
 });
 
-/**
- *@desc        Create SubCategories
- *@route       POST /api/v1/categories/:categoryId/subcategories
- *@access      Private
- */
 export const createSubCategory = asyncHandler(async (req, res, next) => {
   const verifiedFields = pickAllowedFields(
     subCategoriesFields.ALLOWED_SUBCATEGORY_CREATE_FIELDS,
@@ -47,11 +32,6 @@ export const createSubCategory = asyncHandler(async (req, res, next) => {
   res.status(201).json({ data: doc });
 });
 
-/**
- *@desc        Update SubCategories
- *@route       PATCH /api/v1/subcategories/:subCategoryId
- * @access      Private
- */
 export const updateSubCategory = asyncHandler(async (req, res, next) => {
   const verifiedFields = pickAllowedFields(
     subCategoriesFields.ALLOWED_SUBCATEGORY_UPDATE_FIELDS,
@@ -68,11 +48,6 @@ export const updateSubCategory = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: doc });
 });
 
-/**
- *@desc        Delete SubCategories
- *@route       DELETE /api/v1/subcategories/:subCategoryId
- *@access      Private
- */
 export const deleteSubCategory = factory.del({
   service: subCategoryService,
   fieldParamId: "subCategoryId",

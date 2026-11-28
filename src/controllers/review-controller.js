@@ -10,31 +10,16 @@ const populateOptions = {
   select: "firstName lastName profileImage",
 };
 
-/**
- *@desc        Get Reviews
- *@route       GET /api/v1/products/:productId/reviews
- *@access      Public
- */
 export const getReviews = factory.getDocs({
   service: reviewService,
 });
 
-/**
- *@desc        Get Specific Review
- *@route       GET /api/v1/reviews/:reviewId
- *@access      Public
- */
 export const getReview = factory.getDoc({
   service: reviewService,
   fieldParamId: "reviewId",
   populateOptions,
 });
 
-/**
- *@desc        Create Review
- *@route       POST /api/v1/products/:productId/reviews
- *@access      Private
- */
 export const createReview = asyncHandler(async (req, res, next) => {
   const verifiedFields = pickAllowedFields(ALLOWED_REVIEW_FIELDS, req.body);
 
@@ -47,11 +32,6 @@ export const createReview = asyncHandler(async (req, res, next) => {
   res.status(201).json({ data: review });
 });
 
-/**
- *@desc        Update Review
- *@route       PATCH /api/v1/reviews/:reviewId
- *@access      Private
- */
 export const updateReview = asyncHandler(async (req, res, next) => {
   const verifiedFields = pickAllowedFields(ALLOWED_REVIEW_FIELDS, req.body);
 
@@ -64,11 +44,6 @@ export const updateReview = asyncHandler(async (req, res, next) => {
   res.status(200).json({ data: review });
 });
 
-/**
- *@desc        Delete Review
- *@route       DELETE /api/v1/reviews/:reviewId
- *@access      Private
- */
 export const deleteReview = asyncHandler(async (req, res, next) => {
   const { _id, role } = req.user;
 

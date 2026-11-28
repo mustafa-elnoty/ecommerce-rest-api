@@ -18,11 +18,6 @@ const sendAuthResponse = (
   });
 };
 
-/**
- *@desc        Sign Up (Register new user)
- *@route       POST /api/v1/auth/signup
- *@access      Public
- */
 export const registerUser = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
@@ -36,11 +31,6 @@ export const registerUser = asyncHandler(async (req, res, next) => {
   sendAuthResponse(res, 201, { user, accessToken, refreshToken });
 });
 
-/**
- *@desc        Login
- *@route       POST /api/v1/auth/login
- *@access      Public
- */
 export const login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
 
@@ -52,11 +42,6 @@ export const login = asyncHandler(async (req, res, next) => {
   sendAuthResponse(res, 200, { user, accessToken, refreshToken });
 });
 
-/**
- *@desc        Get new Access Token using Refresh Token
- *@route       POST /api/v1/auth/refresh-token
- *@access      Public ( just need invalid refresh token cookie )
- */
 export const refreshAccessToken = asyncHandler(async (req, res, next) => {
   const { refreshToken } = req.cookies;
 
@@ -65,11 +50,6 @@ export const refreshAccessToken = asyncHandler(async (req, res, next) => {
   res.status(200).json({ accessToken });
 });
 
-/**
- *@desc        Logout - cancel Refresh Token
- *@route       POST /api/v1/auth/logout
- *@access      Public
- */
 export const logout = asyncHandler(async (req, res, next) => {
   const { refreshToken } = req.cookies;
 
@@ -79,11 +59,6 @@ export const logout = asyncHandler(async (req, res, next) => {
   res.status(204).send();
 });
 
-/**
- *@desc        Forgot Password - send reset code via email
- *@route       POST /api/v1/auth/forgot-password
- *@access      Public
- */
 export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
@@ -94,11 +69,6 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   });
 });
 
-/**
- *@desc        Verify Password Reset Code
- *@route       POST /api/v1/auth/verify-reset-code
- *@access      Public
- */
 export const verifyResetCode = asyncHandler(async (req, res, next) => {
   const { email, resetCode } = req.body;
 
@@ -107,11 +77,6 @@ export const verifyResetCode = asyncHandler(async (req, res, next) => {
   res.status(200).json({ resetToken });
 });
 
-/**
- *@desc        Reset Password - after code is verified
- *@route       PATCH /api/v1/auth/reset-password
- *@access      Public
- */
 export const resetPassword = asyncHandler(async (req, res, next) => {
   const { resetToken, newPassword } = req.body;
 
