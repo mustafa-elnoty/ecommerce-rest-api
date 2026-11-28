@@ -18,7 +18,7 @@ const sendAuthResponse = (
   });
 };
 
-export const registerUser = asyncHandler(async (req, res, next) => {
+export const register = asyncHandler(async (req, res, next) => {
   const { firstName, lastName, email, password } = req.body;
 
   const { user, accessToken, refreshToken } = await authService.registerUser({

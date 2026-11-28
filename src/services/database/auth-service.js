@@ -13,12 +13,7 @@ import generateResetToken from "../../utils/generate-reset-token.js";
 
 const getResetExpiration = () => Date.now() + 10 * 60 * 1000;
 
-export const registerUser = async ({
-  firstName,
-  lastName,
-  email,
-  password,
-}) => {
+export const register = async ({ firstName, lastName, email, password }) => {
   // There's no need to check that the email exists. We have a handle duplicate key in error-middleware.
   const user = await userModel.create({ firstName, lastName, email, password });
 
